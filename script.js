@@ -103,7 +103,7 @@ function render() {
       x: cx, y: H - M.bottom + 18, 'text-anchor': 'middle',
       class: 'axis-text' + (partial ? ' partial' : '')
     }, svg);
-    lbl.textContent = "\u2019" + String(yObj.year).slice(2);
+    lbl.textContent = String(yObj.year);
     if (partial) {
       el('text', { x: cx, y: H - M.bottom + 30, 'text-anchor': 'middle',
         class: 'axis-text partial', 'font-size': '9px' }, svg).textContent = 'partial';
