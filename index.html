@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cleveland police discipline charges by year</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="viz-container">
+  <div class="viz-header">
+    <p class="viz-kicker">Signal Cleveland</p>
+    <h1 class="viz-heading">What Cleveland police get disciplined for, year by year</h1>
+    <p class="viz-subheading">1,596 dated disciplinary cases. Each bar&rsquo;s height is that year&rsquo;s number of cases; the colored segments show what those cases were about.</p>
+  </div>
+  <div class="toggle-bar">
+    <span class="toggle-label">Show as:</span>
+    <button class="toggle-btn active" data-mode="count">Number of cases</button>
+    <button class="toggle-btn" data-mode="share">Share of cases</button>
+  </div>
+  <div class="chart-area">
+    <svg id="chart" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Stacked column chart of Cleveland police disciplinary hearings by year and charge category"></svg>
+    <div class="bar-tooltip" id="tooltip"></div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div class="viz-note" id="note"></div>
+</div>
+
+<script src="script.js"></script>
+<script src="https://pym.nprapps.com/pym.v1.min.js"></script>
+<script>new pym.Child({ polling: 500 });</script>
+</body>
+</html>
