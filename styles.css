@@ -66,7 +66,7 @@ body {
   padding: 6px 14px; border-radius: 2px; border: 1px solid #ccd8db;
   background: #fff; cursor: pointer; transition: all 0.12s; color: #23685b; white-space: nowrap;
 }
-.toggle-btn:hover { background: #ccd8db; }
+.toggle-btn:hover { background: transparent; border-color: #404F54; }
 .toggle-btn.active { color: #fff; border-color: transparent; background: #23685b; }
  
 /* Chart */
