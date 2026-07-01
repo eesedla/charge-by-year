@@ -36,7 +36,6 @@ YEAR_DATA.years.forEach(y => y.segments.forEach(s => { catTotals[s.group] += s.c
 let mode = 'count';     // 'count' | 'share'
 let solo = new Set();   // category names highlighted, or empty
 let chartAnimated = false;
-let currentClipRect = null;
  
 const svg = document.getElementById('chart');
 const SVGNS = 'http://www.w3.org/2000/svg';
@@ -64,34 +63,64 @@ function el(tag, attrs, parent) {
   return e;
 }
  
-function setupClip() {
+// Segments grow up from the x-axis into their stacked slot, category by
+// category, so the stack appears to build itself — top segment first.
+const STAGGER_ORDER = [...YEAR_DATA.groupOrder].reverse(); // Drugs and Alcohol first
+const SEG_DURATION = 1000;
+const STAGGER_STEP = 6;
+const TOTAL_DURATION = (STAGGER_ORDER.length - 1) * STAGGER_STEP + SEG_DURATION;
+
+const ease = t => {
+  const c1 = 0.5, c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+};
+
+let animGen = 0;
+
+function hideBars() {
   const baseline = M.top + plotH;
-  const defs = el('defs', {}, svg);
-  const clipPath = el('clipPath', { id: 'bars-reveal' }, defs);
-  const clipRect = el('rect', { x: M.left, y: baseline, width: plotW, height: 0 }, clipPath);
-  Array.from(svg.querySelectorAll('.seg')).forEach(r => r.setAttribute('clip-path', 'url(#bars-reveal)'));
-  return clipRect;
+  Array.from(svg.querySelectorAll('.seg')).forEach(rect => {
+    rect.setAttribute('y', baseline);
+    rect.setAttribute('height', 0);
+  });
+  Array.from(svg.querySelectorAll('.col-total')).forEach(l => l.setAttribute('opacity', '0'));
 }
 
-function animateClip(clipRect) {
+function animateBars() {
+  const gen = ++animGen;
   const baseline = M.top + plotH;
-  const duration = 1600;
   const start = performance.now();
-  const ease = t => {
-    const c1 = 1.4, c3 = c1 + 1;
-    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
-  };
-  const labelStart = 0.7; // labels begin fading in once bars are mostly grown
-  function frame(now) {
-    const t = Math.min((now - start) / duration, 1);
-    const h = plotH * ease(t);
-    clipRect.setAttribute('y', baseline - h);
-    clipRect.setAttribute('height', h);
-    const labelOpacity = Math.max(0, Math.min(1, (t - labelStart) / (1 - labelStart)));
-    Array.from(svg.querySelectorAll('.col-total')).forEach(l => l.setAttribute('opacity', labelOpacity));
-    if (t < 1) requestAnimationFrame(frame);
+
+  Array.from(svg.querySelectorAll('.seg')).forEach(rect => {
+    const finalY = parseFloat(rect.dataset.finalY);
+    const finalH = parseFloat(rect.dataset.finalHeight);
+    const delay = STAGGER_ORDER.indexOf(rect.dataset.group) * STAGGER_STEP;
+    rect.setAttribute('y', baseline);
+    rect.setAttribute('height', 0);
+    function frame(now) {
+      if (gen !== animGen) return;
+      const elapsed = now - start - delay;
+      if (elapsed < 0) { requestAnimationFrame(frame); return; }
+      const t = Math.min(elapsed / SEG_DURATION, 1);
+      const e = ease(t);
+      rect.setAttribute('height', Math.max(finalH * e, 0));
+      rect.setAttribute('y', baseline + (finalY - baseline) * e);
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  });
+
+  const totals = Array.from(svg.querySelectorAll('.col-total'));
+  totals.forEach(l => l.setAttribute('opacity', '0'));
+  const labelStart = 0.75; // labels finish fading in as the last segments settle
+  function labelFrame(now) {
+    if (gen !== animGen) return;
+    const t = Math.min((now - start) / TOTAL_DURATION, 1);
+    const op = Math.max(0, Math.min(1, (t - labelStart) / (1 - labelStart)));
+    totals.forEach(l => l.setAttribute('opacity', op));
+    if (t < 1) requestAnimationFrame(labelFrame);
   }
-  requestAnimationFrame(frame);
+  requestAnimationFrame(labelFrame);
 }
 
 function render() {
@@ -144,7 +173,8 @@ function render() {
       const rect = el('rect', {
         x: x, y: yPos, width: barW, height: Math.max(segH, 0),
         fill: s.color, class: 'seg' + (dimmed ? ' dim' : ''),
-        'data-year': yObj.year, 'data-group': s.group
+        'data-year': yObj.year, 'data-group': s.group,
+        'data-final-y': yPos, 'data-final-height': Math.max(segH, 0)
       }, svg);
       if (!dimmed) {
         rect.addEventListener('mousemove', (ev) => showTip(ev, yObj, s, ms));
@@ -223,18 +253,14 @@ function renderLegend() {
  
 
  
-function animateBars() {
-  currentClipRect = setupClip();
-  if (chartAnimated) animateClip(currentClipRect);
-}
-
 document.querySelectorAll('.toggle-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     mode = btn.dataset.mode;
     render();
-    animateBars();
+    if (chartAnimated) animateBars();
+    else hideBars();
   });
 });
 
@@ -245,10 +271,10 @@ chartArea.appendChild(xAxisSentinel);
 const observer = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting && !chartAnimated) {
     chartAnimated = true;
-    animateClip(currentClipRect);
+    animateBars();
   }
 }, { threshold: 0 });
 
 render();
-currentClipRect = setupClip();
+hideBars();
 observer.observe(xAxisSentinel);
