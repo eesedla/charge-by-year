@@ -67,7 +67,7 @@ function el(tag, attrs, parent) {
 // category, so the stack appears to build itself — top segment first.
 const STAGGER_ORDER = [...YEAR_DATA.groupOrder].reverse(); // Drugs and Alcohol first
 const SEG_DURATION = 1000;
-const STAGGER_STEP = 6;
+const STAGGER_STEP = 0;
 const TOTAL_DURATION = (STAGGER_ORDER.length - 1) * STAGGER_STEP + SEG_DURATION;
 
 const ease = t => {
