@@ -246,6 +246,7 @@ function renderLegend() {
     chip.innerHTML =
       `<span class="lg-dot" style="background:${YEAR_DATA.groupColors[g]}"></span>` +
       `${g}<span class="lg-count">${fmt(catTotals[g])}</span>`;
+    chip.style.setProperty('--chip-color', YEAR_DATA.groupColors[g]);
     chip.addEventListener('click', () => { solo.has(g) ? solo.delete(g) : solo.add(g); render(); });
     legend.appendChild(chip);
   });

@@ -91,18 +91,22 @@ body {
   padding: 4px 20px 16px; display: flex; flex-wrap: wrap; gap: 5px 6px;
 }
 .legend-chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Roboto Condensed', sans-serif; font-size: 0.8rem; font-weight: 500;
-  color: #404F54; padding: 4px 9px 4px 7px; border: 1px solid rgba(64,79,84,0.28);
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'Roboto Condensed', 'Arial Narrow', sans-serif; font-size: 0.85rem; font-weight: 500;
+  color: #404F54; padding: 6px 14px; border: 1px solid #ccd8db;
   border-radius: 2px; background: #fff; cursor: pointer; transition: all 0.12s; line-height: 1;
 }
-.legend-chip:hover { border-color: #404F54; }
-.legend-chip .lg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.legend-chip:hover { border-color: #23685b; }
+.legend-chip .lg-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; opacity: 0.85; }
 .legend-chip .lg-count {
   font-family: 'Inter', sans-serif; font-size: 0.7rem; opacity: 0.55; font-weight: 500;
 }
 .legend-chip.muted { opacity: 0.4; }
-.legend-chip.solo { border-color: #404F54; box-shadow: 0 1px 5px rgba(0,0,0,0.12); }
+.legend-chip.solo {
+  background: var(--chip-color, #404F54); color: #fff; border-color: transparent;
+}
+.legend-chip.solo .lg-dot { background: rgba(255,255,255,0.8) !important; }
+.legend-chip.solo .lg-count { opacity: 0.85; }
  
 /* Tooltip */
 .bar-tooltip {
