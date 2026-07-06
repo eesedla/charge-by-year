@@ -73,16 +73,30 @@ CSV_CHARGE_ALIASES = {
 
 # ── 2. Parse CSV ─────────────────────────────────────────────────────────────
 
+
+ID_PAT = re.compile(r"^\s*(\d{2})-\d+")
+
+def year_of(row):
+    """Year for a case: Hearing Date, else Effective date of termination,
+    else the YY- prefix of the report ID (e.g. 17-126 -> 2017)."""
+    for col in ("Hearing Date", "Effective date of termination"):
+        m = re.search(r"(20\d\d)", (row.get(col) or "").strip())
+        if m:
+            return int(m.group(1))
+    p = ID_PAT.match(row.get("Link to original report") or "")
+    return 2000 + int(p.group(1)) if p else None
+
+YEAR_MIN, YEAR_MAX = 2017, 2025  # exclude partial edge years (2016, 2026)
+
 year_group_cases = defaultdict(lambda: defaultdict(int))  # year -> group -> cases
 year_cases       = defaultdict(int)                        # year -> total cases
 unmapped         = defaultdict(int)
 
 with open(CSV_PATH, newline="", encoding="utf-8-sig") as f:
     for row in csv.DictReader(f):
-        m = re.search(r"(20\d\d)", row["Hearing Date"].strip())
-        if not m:
-            continue  # no hearing date -> can't place on a year axis
-        year = int(m.group(1))
+        year = year_of(row)
+        if year is None or not (YEAR_MIN <= year <= YEAR_MAX):
+            continue
         year_cases[year] += 1
 
         charges = [c.strip() for c in row["Charges"].split(",") if c.strip()]

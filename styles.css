@@ -66,7 +66,7 @@ body {
   padding: 6px 14px; border-radius: 2px; border: 1px solid #ccd8db;
   background: #fff; cursor: pointer; transition: all 0.12s; color: #23685b; white-space: nowrap;
 }
-.toggle-btn:hover { background: transparent; border-color: #404F54; }
+.toggle-btn:hover { background: transparent; border-color: #23685b; }
 .toggle-btn.active { color: #fff; border-color: transparent; background: #23685b; }
  
 /* Chart */
@@ -74,7 +74,7 @@ body {
 #chart { width: 100%; height: auto; display: block; }
 .col-group { cursor: default; }
 .seg { transition: opacity 0.15s ease; }
-.seg.dim { opacity: 0.16; }
+.seg.dim { opacity: 0.06; }
 .axis-text {
   font-family: 'Inter', sans-serif; fill: #404F54; font-size: 12px;
 }
@@ -107,9 +107,9 @@ body {
 /* Tooltip */
 .bar-tooltip {
   position: absolute; pointer-events: none; background: #404F54; color: #fff;
-  font-family: 'Roboto Condensed', sans-serif; font-size: 0.75rem; line-height: 1.5;
-  padding: 11px 14px; border-radius: 2px; max-width: 260px; min-width: 170px;
-  opacity: 0; transition: opacity 0.12s; z-index: 20; box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  font-family: 'Inter', Arial, sans-serif; font-size: 0.75rem; line-height: 1.5;
+  padding: 12px 16px; border-radius: 2px; max-width: 280px; min-width: 180px;
+  opacity: 0; transition: opacity 0.15s; z-index: 20; box-shadow: 0 4px 16px rgba(0,0,0,0.18);
 }
 .bar-tooltip.visible { opacity: 1; }
 .bar-tooltip .tt-title { font-weight: 700; font-size: 13px; display: block; }
@@ -122,4 +122,16 @@ body {
 .bar-tooltip .tt-label { flex: 1; }
 .bar-tooltip .tt-val { font-weight: 600; white-space: nowrap; }
 .bar-tooltip .tt-pct { opacity: 0.55; margin-left: 3px; }
+
+/* Viz note */
+.viz-note {
+  font-size: 12px;
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 500;
+  color: #404F54;
+  opacity: 0.55;
+  line-height: 1.4;
+  padding: 8px 15px 8px;
+  background: transparent;
+}
  
