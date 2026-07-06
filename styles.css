@@ -5,7 +5,6 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  min-height: 100vh;
   padding: 32px 16px;
 }
 .viz-container {
