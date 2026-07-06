@@ -54,6 +54,10 @@ charge_to_group = {}
 for g in DATA:
     for c in g["charges"]:
         charge_to_group[c["name"].strip().lower()] = g["group"]
+
+# Body Camera charges in the source DATA are text-derived subcategories, not
+# CSV tokens — keep the real CSV token mapped.
+charge_to_group["body camera violation"] = "Body Camera Violation" 
 group_order  = [g["group"] for g in DATA]
 group_colors = {g["group"]: g["color"] for g in DATA}
 
