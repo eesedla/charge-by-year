@@ -118,6 +118,26 @@ with open(CSV_PATH, newline="", encoding="utf-8-sig") as f:
 
 # ── 3. Build payload ─────────────────────────────────────────────────────────
 
+# This chart stacks segments biggest-category-first (see script.js STACK_ORDER)
+# rather than the main tool's thematic groupOrder, so its colors are picked to
+# read well in that order rather than reusing the main tool's category colors.
+# Deliberately diverges from STYLE.md's "same concept = same color" rule for
+# this chart only.
+COLOR_OVERRIDES = {
+    "Body Camera Violation":   "#51a89a",
+    "Unprofessional Behavior": "#a9d2cf",
+    "Attendance":              "#daeae5",
+    "Vehicle and Travel":      "#879599",
+    "Use of Force":            "#aab7ba",
+    "Integrity and Honesty":   "#ccd8db",
+    "Compliance":              "#e0e4e1",
+    "Criminal Conduct":        "#d64d4d",
+    "Evidence and Property":   "#dd6969",
+    "Improper Conduct":        "#e89494",
+    "Drugs and Alcohol":       "#f2bcbc",
+}
+group_colors = {**group_colors, **COLOR_OVERRIDES}
+
 years_out = []
 for y in sorted(year_group_cases):
     segs = [
