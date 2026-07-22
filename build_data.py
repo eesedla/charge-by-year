@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """
-Regenerate the YEAR_DATA constant in this folder's script.js from cpd_data.csv.
+Regenerate data.json from cpd_data.csv.
 
-Counts disciplinary cases per year, broken down by charge category. The
-charge -> category mapping, category order, and colors are read directly from
-the MAIN charges tool's script.js (the one containing `const DATA = [...]`),
-so this chart always stays in sync with that tool. A case is counted once per
-category it touches (deduplicated within the case), so a case whose charges
-span two categories is counted in each of those two categories.
+Counts disciplinary cases per year, broken down by charge category. A case is
+counted once per category it touches (deduplicated within the case), so a
+case whose charges span two categories is counted in each of those two
+categories.
+
+The charge -> category mapping, category order, and colors are defined here
+statically (TAXONOMY) rather than read from another repo's script.js — this
+tool needs nothing outside its own folder. It's kept in sync by hand with the
+CPD-Bubble-Viz tool's TAXONOMY (same categories, same colors, per STYLE.md's
+"same concept = same color" rule); if a charge moves categories there, mirror
+the change here.
 
 Setup:
   - Put cpd_data.csv next to this file (or edit CSV_PATH).
-  - Point SOURCE_SCRIPT_JS at the main tool's script.js (the file with
-    `const DATA = [...]`). By default it looks for ../script.js, then a
-    sibling named source_script.js.
 
 Run:
   python3 build_data.py
@@ -25,41 +27,107 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-HERE = Path(__file__).parent
-TARGET_SCRIPT_JS = HERE / "script.js"          # this chart's script.js (gets YEAR_DATA)
-CSV_PATH         = HERE / "cpd_data.csv"
+HERE      = Path(__file__).parent
+DATA_JSON = HERE / "data.json"
+CSV_PATH  = HERE / "cpd_data.csv"
 
-# The main tool's script.js, which holds `const DATA = [...]`.
-# Edit this if your folder layout differs.
-SOURCE_CANDIDATES = [HERE.parent / "script.js", HERE / "source_script.js"]
+# ── 1. Static taxonomy ────────────────────────────────────────────────────────
+# Same 12 categories, same colors as CPD-Bubble-Viz's TAXONOMY — 12 distinct
+# hues, no category sharing a lighter/darker shade of another category's hue.
+# (Previously this chart used its own COLOR_OVERRIDES ramp — three hues each
+# graduated into 3-4 shades to cover the 12 categories — which reads as a
+# gradient implying an order these categories don't have. Fixed per Cid's
+# review: reserve gradients for spectrums, not identity.)
 
-# ── 1. Locate and read the source mapping ────────────────────────────────────
+GROUP_ORDER = [
+    "Neglect of Duty", "Unprofessional Behavior", "Body Camera Violation",
+    "Attendance", "Use of Force", "Integrity and Honesty", "Vehicle and Travel",
+    "Compliance", "Criminal Conduct", "Improper Conduct", "Evidence and Property",
+    "Drugs and Alcohol",
+]
 
-def find_source():
-    for p in SOURCE_CANDIDATES:
-        if p.exists():
-            txt = p.read_text(encoding="utf-8")
-            if re.search(r"const DATA = \[", txt):
-                return p, txt
-    raise FileNotFoundError(
-        "Could not find the main tool's script.js (with `const DATA = [...]`). "
-        f"Looked in: {', '.join(str(p) for p in SOURCE_CANDIDATES)}. "
-        "Edit SOURCE_CANDIDATES in this script to point at it."
-    )
+GROUP_COLORS = {
+    "Neglect of Duty":         "#23685b",
+    "Body Camera Violation":   "#7d6b9e",
+    "Unprofessional Behavior": "#879599",
+    "Attendance":              "#e6a94d",
+    "Vehicle and Travel":      "#5fa896",
+    "Use of Force":            "#d64d4d",
+    "Integrity and Honesty":   "#4d7ea8",
+    "Compliance":              "#a9d2cf",
+    "Criminal Conduct":        "#ccd8db",
+    "Evidence and Property":   "#e56430",
+    "Improper Conduct":        "#d0d64c",
+    "Drugs and Alcohol":       "#dbe7e3",
+}
 
-source_path, source_raw = find_source()
-DATA = json.loads(re.search(r"const DATA = (\[.*?\]);", source_raw, re.DOTALL).group(1))
-
-charge_to_group = {}
-for g in DATA:
-    for c in g["charges"]:
-        charge_to_group[c["name"].strip().lower()] = g["group"]
-
-# Body Camera charges in the source DATA are text-derived subcategories, not
-# CSV tokens — keep the real CSV token mapped.
-charge_to_group["body camera violation"] = "Body Camera Violation" 
-group_order  = [g["group"] for g in DATA]
-group_colors = {g["group"]: g["color"] for g in DATA}
+CHARGE_TO_GROUP = {
+    # Neglect of Duty
+    "failure to report/notify":              "Neglect of Duty",
+    "lack of service":                       "Neglect of Duty",
+    "neglect of duty":                       "Neglect of Duty",
+    "duty report violation":                 "Neglect of Duty",
+    "failure to supervise":                  "Neglect of Duty",
+    "asleep on-duty":                        "Neglect of Duty",
+    "failed to assist":                      "Neglect of Duty",
+    "failed to provide language services":   "Neglect of Duty",
+    "failed to take corrective action":      "Neglect of Duty",
+    # Unprofessional Behavior
+    "unprofessional conduct":                "Unprofessional Behavior",
+    "offensive remarks":                     "Unprofessional Behavior",
+    "diminished esteem of cpd":              "Unprofessional Behavior",
+    "uniform violation":                     "Unprofessional Behavior",
+    "appearance of impropriety":             "Unprofessional Behavior",
+    "telecommunications violation":          "Unprofessional Behavior",
+    "failed to identify":                    "Unprofessional Behavior",
+    # Body Camera Violation (CSV only has the generic token below)
+    "body camera violation":                 "Body Camera Violation",
+    # Attendance
+    "sick leave abuse":                      "Attendance",
+    "absent without leave (awol)":           "Attendance",
+    "refusal of mandatory overtime":         "Attendance",
+    "tardiness":                             "Attendance",
+    "attendance and overtime violations":    "Attendance",
+    # Use of Force
+    "use of force violation":                "Use of Force",
+    "failed to report/intervene":            "Use of Force",
+    "failed to de-escalate":                 "Use of Force",
+    "failed to request medical attention":   "Use of Force",
+    "improperly handled a firearm":          "Use of Force",
+    "unauthorized ammunition/firearms":      "Use of Force",
+    # Integrity and Honesty
+    "untruthfulness":                        "Integrity and Honesty",
+    "database misuse":                       "Integrity and Honesty",
+    "cheating and plagiarism":               "Integrity and Honesty",
+    "confidential information violation":    "Integrity and Honesty",
+    "ethics violation":                      "Integrity and Honesty",
+    # Vehicle and Travel
+    "vehicle pursuit violation":             "Vehicle and Travel",
+    "preventable motor vehicle accident":    "Vehicle and Travel",
+    "travel violation":                      "Vehicle and Travel",
+    # Compliance
+    "insubordination":                       "Compliance",
+    "unauthorized secondary employment":     "Compliance",
+    "ops investigation violation":           "Compliance",
+    # Criminal Conduct
+    "arrest or criminal charge":             "Criminal Conduct",
+    "violence in the workplace":             "Criminal Conduct",
+    # Improper Conduct
+    "improper search/frisk":                 "Improper Conduct",
+    "improper arrest/detainment":            "Improper Conduct",
+    "improper tow":                          "Improper Conduct",
+    "improper stop":                         "Improper Conduct",
+    "arrestee handling violation":           "Improper Conduct",
+    "improper citation":                     "Improper Conduct",
+    "mishandled juvenile":                   "Improper Conduct",
+    # Evidence and Property
+    "failed to safeguard equipment":         "Evidence and Property",
+    "evidence collection violation":         "Evidence and Property",
+    "failed to safeguard property":          "Evidence and Property",
+    # Drugs and Alcohol
+    "drug & alcohol testing policy violation":            "Drugs and Alcohol",
+    "consumed prohibited substance while on duty":        "Drugs and Alcohol",
+}
 
 # Same alias table the main tool uses to reconcile CSV charge spellings.
 CSV_CHARGE_ALIASES = {
@@ -76,7 +144,6 @@ CSV_CHARGE_ALIASES = {
 }
 
 # ── 2. Parse CSV ─────────────────────────────────────────────────────────────
-
 
 ID_PAT = re.compile(r"^\s*(\d{2})-\d+")
 
@@ -108,7 +175,7 @@ with open(CSV_PATH, newline="", encoding="utf-8-sig") as f:
         for charge in charges:
             ckey = charge.lower().strip()
             ckey = CSV_CHARGE_ALIASES.get(ckey, ckey)
-            grp = charge_to_group.get(ckey)
+            grp = CHARGE_TO_GROUP.get(ckey)
             if grp is None:
                 unmapped[charge] += 1
                 continue
@@ -118,57 +185,23 @@ with open(CSV_PATH, newline="", encoding="utf-8-sig") as f:
 
 # ── 3. Build payload ─────────────────────────────────────────────────────────
 
-# This chart stacks segments biggest-category-first (see script.js STACK_ORDER)
-# rather than the main tool's thematic groupOrder, so its colors are picked to
-# read well in that order rather than reusing the main tool's category colors.
-# Deliberately diverges from STYLE.md's "same concept = same color" rule for
-# this chart only.
-COLOR_OVERRIDES = {
-    "Body Camera Violation":   "#51a89a",
-    "Unprofessional Behavior": "#a9d2cf",
-    "Attendance":              "#daeae5",
-    "Vehicle and Travel":      "#879599",
-    "Use of Force":            "#aab7ba",
-    "Integrity and Honesty":   "#ccd8db",
-    "Compliance":              "#e0e4e1",
-    "Criminal Conduct":        "#d64d4d",
-    "Evidence and Property":   "#dd6969",
-    "Improper Conduct":        "#e89494",
-    "Drugs and Alcohol":       "#f2bcbc",
-}
-group_colors = {**group_colors, **COLOR_OVERRIDES}
-
 years_out = []
 for y in sorted(year_group_cases):
     segs = [
-        {"group": g, "count": year_group_cases[y][g], "color": group_colors[g]}
-        for g in group_order if year_group_cases[y][g] > 0
+        {"group": g, "count": year_group_cases[y][g], "color": GROUP_COLORS[g]}
+        for g in GROUP_ORDER if year_group_cases[y][g] > 0
     ]
     years_out.append({"year": y, "total": year_cases[y], "segments": segs})
 
-payload = {"groupOrder": group_order, "groupColors": group_colors, "years": years_out}
+payload = {"groupOrder": GROUP_ORDER, "groupColors": GROUP_COLORS, "years": years_out}
 
-# ── 4. Write back into this folder's script.js ───────────────────────────────
-
-raw = TARGET_SCRIPT_JS.read_text(encoding="utf-8")
-data_json = json.dumps(payload, separators=(",", ":"))
-new_raw, n = re.subn(
-    r"const YEAR_DATA = .*?;",
-    f"const YEAR_DATA = {data_json};",
-    raw,
-    count=1,
-    flags=re.DOTALL,
-)
-if n == 0:
-    raise RuntimeError("Could not find 'const YEAR_DATA = ...;' in script.js")
-TARGET_SCRIPT_JS.write_text(new_raw, encoding="utf-8")
+DATA_JSON.write_text(json.dumps(payload, separators=(",", ":")), encoding="utf-8")
 
 total = sum(year_cases.values())
-print(f"Source mapping: {source_path}")
-print(f"Updated {TARGET_SCRIPT_JS.name} — {total} dated cases across {len(years_out)} years.")
+print(f"Wrote {DATA_JSON.name} — {total} dated cases across {len(years_out)} years.")
 for y in years_out:
     print(f"  {y['year']}: {y['total']} cases")
 if unmapped:
-    print("\nUNMAPPED CHARGES (excluded — add to the main tool's DATA or to CSV_CHARGE_ALIASES):")
+    print("\nUNMAPPED CHARGES (excluded — add to CHARGE_TO_GROUP or CSV_CHARGE_ALIASES):")
     for ch, cnt in sorted(unmapped.items(), key=lambda x: -x[1]):
         print(f"  [{cnt:4d}x]  {ch}")

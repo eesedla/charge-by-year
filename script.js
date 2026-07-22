@@ -1,5 +1,5 @@
-const YEAR_DATA = {"groupOrder":["Neglect of Duty","Unprofessional Behavior","Body Camera Violation","Attendance","Use of Force","Integrity and Honesty","Vehicle and Travel","Compliance","Criminal Conduct","Improper Conduct","Evidence and Property","Drugs and Alcohol"],"groupColors":{"Neglect of Duty":"#23685b","Unprofessional Behavior":"#a9d2cf","Body Camera Violation":"#51a89a","Attendance":"#daeae5","Use of Force":"#aab7ba","Integrity and Honesty":"#ccd8db","Vehicle and Travel":"#879599","Compliance":"#e0e4e1","Criminal Conduct":"#d64d4d","Improper Conduct":"#e89494","Evidence and Property":"#dd6969","Drugs and Alcohol":"#f2bcbc"},"years":[{"year":2017,"total":165,"segments":[{"group":"Neglect of Duty","count":50,"color":"#23685b"},{"group":"Unprofessional Behavior","count":28,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":17,"color":"#51a89a"},{"group":"Attendance","count":26,"color":"#daeae5"},{"group":"Use of Force","count":20,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":20,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":18,"color":"#879599"},{"group":"Compliance","count":18,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":13,"color":"#d64d4d"},{"group":"Improper Conduct","count":12,"color":"#e89494"},{"group":"Evidence and Property","count":14,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":6,"color":"#f2bcbc"}]},{"year":2018,"total":213,"segments":[{"group":"Neglect of Duty","count":65,"color":"#23685b"},{"group":"Unprofessional Behavior","count":35,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":32,"color":"#51a89a"},{"group":"Attendance","count":41,"color":"#daeae5"},{"group":"Use of Force","count":14,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":38,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":19,"color":"#879599"},{"group":"Compliance","count":24,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":17,"color":"#d64d4d"},{"group":"Improper Conduct","count":16,"color":"#e89494"},{"group":"Evidence and Property","count":9,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":4,"color":"#f2bcbc"}]},{"year":2019,"total":174,"segments":[{"group":"Neglect of Duty","count":50,"color":"#23685b"},{"group":"Unprofessional Behavior","count":28,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":42,"color":"#51a89a"},{"group":"Attendance","count":29,"color":"#daeae5"},{"group":"Use of Force","count":11,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":16,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":18,"color":"#879599"},{"group":"Compliance","count":15,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":14,"color":"#d64d4d"},{"group":"Improper Conduct","count":14,"color":"#e89494"},{"group":"Evidence and Property","count":14,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":4,"color":"#f2bcbc"}]},{"year":2020,"total":238,"segments":[{"group":"Neglect of Duty","count":54,"color":"#23685b"},{"group":"Unprofessional Behavior","count":48,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":64,"color":"#51a89a"},{"group":"Attendance","count":44,"color":"#daeae5"},{"group":"Use of Force","count":21,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":12,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":21,"color":"#879599"},{"group":"Compliance","count":15,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":13,"color":"#d64d4d"},{"group":"Improper Conduct","count":17,"color":"#e89494"},{"group":"Evidence and Property","count":17,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":1,"color":"#f2bcbc"}]},{"year":2021,"total":257,"segments":[{"group":"Neglect of Duty","count":83,"color":"#23685b"},{"group":"Unprofessional Behavior","count":57,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":85,"color":"#51a89a"},{"group":"Attendance","count":27,"color":"#daeae5"},{"group":"Use of Force","count":30,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":20,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":35,"color":"#879599"},{"group":"Compliance","count":20,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":19,"color":"#d64d4d"},{"group":"Improper Conduct","count":17,"color":"#e89494"},{"group":"Evidence and Property","count":25,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":2,"color":"#f2bcbc"}]},{"year":2022,"total":184,"segments":[{"group":"Neglect of Duty","count":53,"color":"#23685b"},{"group":"Unprofessional Behavior","count":40,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":38,"color":"#51a89a"},{"group":"Attendance","count":26,"color":"#daeae5"},{"group":"Use of Force","count":16,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":18,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":16,"color":"#879599"},{"group":"Compliance","count":16,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":18,"color":"#d64d4d"},{"group":"Improper Conduct","count":16,"color":"#e89494"},{"group":"Evidence and Property","count":21,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":1,"color":"#f2bcbc"}]},{"year":2023,"total":258,"segments":[{"group":"Neglect of Duty","count":75,"color":"#23685b"},{"group":"Unprofessional Behavior","count":61,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":63,"color":"#51a89a"},{"group":"Attendance","count":42,"color":"#daeae5"},{"group":"Use of Force","count":35,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":20,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":23,"color":"#879599"},{"group":"Compliance","count":14,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":18,"color":"#d64d4d"},{"group":"Improper Conduct","count":12,"color":"#e89494"},{"group":"Evidence and Property","count":19,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":5,"color":"#f2bcbc"}]},{"year":2024,"total":138,"segments":[{"group":"Neglect of Duty","count":35,"color":"#23685b"},{"group":"Unprofessional Behavior","count":28,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":23,"color":"#51a89a"},{"group":"Attendance","count":39,"color":"#daeae5"},{"group":"Use of Force","count":14,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":9,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":14,"color":"#879599"},{"group":"Compliance","count":9,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":13,"color":"#d64d4d"},{"group":"Improper Conduct","count":10,"color":"#e89494"},{"group":"Evidence and Property","count":13,"color":"#dd6969"}]},{"year":2025,"total":116,"segments":[{"group":"Neglect of Duty","count":29,"color":"#23685b"},{"group":"Unprofessional Behavior","count":34,"color":"#a9d2cf"},{"group":"Body Camera Violation","count":8,"color":"#51a89a"},{"group":"Attendance","count":36,"color":"#daeae5"},{"group":"Use of Force","count":11,"color":"#aab7ba"},{"group":"Integrity and Honesty","count":5,"color":"#ccd8db"},{"group":"Vehicle and Travel","count":16,"color":"#879599"},{"group":"Compliance","count":8,"color":"#e0e4e1"},{"group":"Criminal Conduct","count":14,"color":"#d64d4d"},{"group":"Improper Conduct","count":6,"color":"#e89494"},{"group":"Evidence and Property","count":2,"color":"#dd6969"},{"group":"Drugs and Alcohol","count":3,"color":"#f2bcbc"}]}]};
- 
+let YEAR_DATA;
+
 const PARTIAL_YEARS = new Set([]);
 const fmt = n => n.toLocaleString('en-US');
 
@@ -28,15 +28,13 @@ const DISPLAY_NAMES = {
 };
  
 // Category totals across all years (hearing-level), for legend ordering/labels
-const catTotals = {};
-YEAR_DATA.groupOrder.forEach(g => catTotals[g] = 0);
-YEAR_DATA.years.forEach(y => y.segments.forEach(s => { catTotals[s.group] += s.count; }));
+let catTotals = {};
 
 // Stack/legend order: biggest category first (drawn at the base of the
 // stack), so the categories driving year-to-year variation and the most
 // common charges overall are easiest to read. Ties keep groupOrder's order.
-const STACK_ORDER = [...YEAR_DATA.groupOrder].sort((a, b) => catTotals[b] - catTotals[a]);
- 
+let STACK_ORDER = [];
+
 // State
 let mode = 'count';     // 'count' | 'share'
 let solo = new Set();   // category names highlighted, or empty
@@ -70,10 +68,10 @@ function el(tag, attrs, parent) {
  
 // Segments grow up from the x-axis into their stacked slot, category by
 // category, so the stack appears to build itself — top segment first.
-const STAGGER_ORDER = [...STACK_ORDER].reverse(); // smallest category first
+let STAGGER_ORDER = []; // smallest category first
 const SEG_DURATION = 1000;
 const STAGGER_STEP = 0;
-const TOTAL_DURATION = (STAGGER_ORDER.length - 1) * STAGGER_STEP + SEG_DURATION;
+let TOTAL_DURATION = SEG_DURATION;
 
 const ease = t => {
   const c1 = 0.5, c3 = c1 + 1;
@@ -281,6 +279,23 @@ const observer = new IntersectionObserver(entries => {
   }
 }, { threshold: 0 });
 
-render();
-hideBars();
-observer.observe(xAxisSentinel);
+fetch('./data.json')
+  .then(r => r.json())
+  .then(payload => {
+    YEAR_DATA = payload;
+
+    catTotals = {};
+    YEAR_DATA.groupOrder.forEach(g => catTotals[g] = 0);
+    YEAR_DATA.years.forEach(y => y.segments.forEach(s => { catTotals[s.group] += s.count; }));
+    STACK_ORDER = [...YEAR_DATA.groupOrder].sort((a, b) => catTotals[b] - catTotals[a]);
+    STAGGER_ORDER = [...STACK_ORDER].reverse();
+    TOTAL_DURATION = (STAGGER_ORDER.length - 1) * STAGGER_STEP + SEG_DURATION;
+
+    render();
+    hideBars();
+    observer.observe(xAxisSentinel);
+  })
+  .catch(err => {
+    chartArea.textContent = 'Could not load data.json — run build_data.py first.';
+    console.error(err);
+  });
